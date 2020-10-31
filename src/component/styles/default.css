@@ -14,6 +14,10 @@ body{
     border-radius: 2px;
 }
 
+._wts_container._wts_disabled ._wts_body{
+    opacity:0.85
+}
+
 ._wts_timeHeaderHour{
     padding: 0.25em;
     border-left: 1px solid var(--_wts_border-color);
@@ -47,7 +51,7 @@ body{
     outline-offset: -1px;
 }
 
-._wts_cell:active:hover{
+._wts_container:not(._wts_disabled) ._wts_cell:active:hover{
     transform: scale(0.95);
 }
 

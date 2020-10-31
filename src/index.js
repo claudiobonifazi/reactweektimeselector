@@ -70,7 +70,10 @@ class App extends React.Component{
 
 	changePar( which, e ){
 		let tmp = this.state;
-		tmp[which] = e.currentTarget.value;
+		switch(e.currentTarget.type){
+			case 'checkbox': tmp[which] = e.currentTarget.checked; break;
+			default: tmp[which] = e.currentTarget.value; break;
+		}
 		this.setState(tmp);
 	}
 

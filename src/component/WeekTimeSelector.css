@@ -67,18 +67,20 @@
 
 ._wts_cell{
     display:block;
-    cursor:pointer;
     user-select:none;
     overflow:hidden;
     layout: paint;
 }
+._wts_container:not(._wts_disabled) ._wts_cell{
+    cursor:pointer;
+}
 
-._wts_cell:focus-visible{
+._wts_container:not(._wts_disabled) ._wts_cell:focus-visible{
     outline: 2px solid var(--_wts_-main-color,red);
     outline-offset: 0;    
 }
 @media screen and (hover:hover){
-    ._wts_cell:not(._wts_selected):hover{
+    ._wts_container:not(._wts_disabled) ._wts_cell:not(._wts_selected):hover{
         outline: 2px solid var(--_wts_-main-color,red);
         outline-offset: 0;
     }

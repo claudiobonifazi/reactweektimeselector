@@ -34,7 +34,11 @@ class WeekTimeSelector extends React.Component{
 
 
 	render(){
-		return <div className="_wts_container" style={this.functionalCSS()}>
+		let className = ["_wts_container"];
+		if( this.props.disabled ){
+			className.push('_wts_disabled');
+		}
+		return <div className={className.join(' ')} style={this.functionalCSS()}>
 				{this._angleHTML()}
 				{this._timeHeaderHTML()}
 				{this._dayColHTML()}
@@ -161,7 +165,7 @@ class WeekTimeSelector extends React.Component{
 	}
 
 	selectCell( key ){
-		if( !this.state.disabled ){
+		if( !this.props.disabled ){
 			let tmp = this.getSelectionsRaw();
 			let found = tmp.indexOf( key );
 			if( found < 0 ){
