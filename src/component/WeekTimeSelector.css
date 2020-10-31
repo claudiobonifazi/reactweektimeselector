@@ -1,0 +1,89 @@
+/*body *{
+    outline: 1px solid rgba(255,0,0,0.25);
+    outline-offset:-1px;
+}
+*/
+._wts_container{
+    --minMinute: 0;
+    --maxMinute: 1440;
+    --stepMinute: 30;
+    --numhours: 24;
+    --numsteps: 48;
+    --numdays: 7;
+
+    position: relative;
+    width:100%;
+    height:100%;
+    display: grid;
+    grid-template-columns: max-content auto;
+    grid-template-rows: max-content auto;
+    
+    background: var(--_wts_background-color,#fff);
+    color: var(--_wts_text-color,#000);
+    font-family: var(--_wts_text-style,Arial);
+    font-size: var(--_wts_text-size,1em);
+}
+
+._wts_timeHeader{
+
+}
+._wts_timeHeaderHours{
+    display: grid;
+    grid-template-columns: repeat( var(--numhours), 1fr );
+}
+._wts_timeHeaderSteps{
+    display: grid;
+    grid-template-columns: repeat( var(--numsteps), 1fr );
+}
+
+._wts_dayCol{
+    display: grid;
+    grid-template-rows: repeat(7,1fr);
+}
+._wts_dayCell{
+    position:relative;
+    display:flex;
+    align-content: center;
+}
+._wts_dayName{
+    position: relative;
+    top: 0;
+    left: 0;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    text-align:center;
+}
+
+._wts_body{
+    position: relative;
+    display:grid;
+    grid-template-columns: repeat( var(--numsteps), 1fr );
+    grid-template-rows: repeat( var(--numdays), 1fr );
+
+    contain: layout;
+    /*overflow:hidden;*/
+}
+
+._wts_cell{
+    display:block;
+    cursor:pointer;
+    user-select:none;
+    overflow:hidden;
+    layout: paint;
+}
+
+._wts_cell:focus-visible{
+    outline: 2px solid var(--_wts_-main-color,red);
+    outline-offset: 0;    
+}
+@media screen and (hover:hover){
+    ._wts_cell:not(._wts_selected):hover{
+        outline: 2px solid var(--_wts_-main-color,red);
+        outline-offset: 0;
+    }
+}
+
+._wts_cell._wts_selected{
+    background: var(--_wts_-main-color,red);
+}

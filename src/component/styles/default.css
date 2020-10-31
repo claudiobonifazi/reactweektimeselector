@@ -1,0 +1,56 @@
+body{
+    --_wts_-main-color: dodgerblue;
+    --_wts_background-color: transparent;
+    --_wts_text-color: #000;
+    --_wts_text-style: Arial;
+    --_wts_text-size: 14px;
+
+    --_wts_border-color: rgba(0,0,0,0.1);
+}
+
+
+._wts_container{
+    border: 1px solid var(--_wts_border-color);
+    border-radius: 2px;
+}
+
+._wts_timeHeaderHour{
+    padding: 0.25em;
+    border-left: 1px solid var(--_wts_border-color);
+    cursor: default;
+    user-select:none;
+}
+._wts_timeHeaderStep{
+    padding: 0.25em;
+    border-left: 1px solid var(--_wts_border-color);
+    cursor: default;
+    font-size: 85%;
+    opacity: 0.667;
+    user-select:none;
+}
+
+._wts_dayCell{
+    padding: 1em 1em 1em 0.25em;
+    border-top: 1px solid var(--_wts_border-color);
+    text-transform: capitalize;
+    cursor: default;
+    user-select:none;
+}
+
+._wts_body{
+    border-left: 1px solid var(--_wts_border-color);
+    border-top: 1px solid var(--_wts_border-color);
+}
+
+._wts_cell{
+    outline: 1px dashed var(--_wts_border-color);
+    outline-offset: -1px;
+}
+
+._wts_cell:active:hover{
+    transform: scale(0.95);
+}
+
+._wts_container:focus-within{
+    outline: 1px solid var(--_wts_-main-color);
+}
