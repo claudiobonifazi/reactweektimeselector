@@ -17,6 +17,7 @@
     display: grid;
     grid-template-columns: max-content auto;
     grid-template-rows: max-content auto;
+    overflow-x: auto;
     
     background: var(--_wts_background-color,#fff);
     color: var(--_wts_text-color,#000);
@@ -66,10 +67,11 @@
 }
 
 ._wts_cell{
+    position: relative;
     display:block;
     user-select:none;
     overflow:hidden;
-    layout: paint;
+    contain: paint;
 }
 ._wts_container:not(._wts_disabled) ._wts_cell{
     cursor:pointer;
@@ -88,4 +90,33 @@
 
 ._wts_cell._wts_selected{
     background: var(--_wts_-main-color,red);
+}
+
+
+._wts_container._wts_showStartEndLabel ._wts_cell:not(._wts_selected)+._wts_cell._wts_selected::before,
+._wts_container._wts_showStartEndLabel ._wts_cell._wts_selected+._wts_cell:not(._wts_selected)::before{
+    content: attr(data-hh);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    color: var(--_wts_label_col);
+}
+._wts_container._wts_showStartEndLabel ._wts_cell:not(._wts_selected)+._wts_cell._wts_selected::before{
+    text-indent: 4px;
+    line-height: 1;
+    transform: rotate(180deg) translate(-2px,0);
+}
+._wts_container._wts_showStartEndLabel ._wts_cell._wts_selected+._wts_cell:not(._wts_selected)::before{
+    text-align: right;
+    padding-bottom: 3px;
+    transform: rotate(180deg) translate(100%,0);
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
 }

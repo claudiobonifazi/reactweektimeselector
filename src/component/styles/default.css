@@ -6,6 +6,7 @@ body{
     --_wts_text-size: 14px;
 
     --_wts_border-color: rgba(0,0,0,0.1);
+    --_wts_label_col: #fff;
 }
 
 
@@ -57,4 +58,17 @@ body{
 
 ._wts_container:focus-within{
     outline: 1px solid var(--_wts_-main-color);
+}
+
+
+._wts_container._wts_showStartEndLabel ._wts_cell:not(._wts_selected)+._wts_cell._wts_selected::before,
+._wts_container._wts_showStartEndLabel ._wts_cell._wts_selected+._wts_cell:not(._wts_selected)::before{
+    opacity: 0.55;
+    letter-spacing:0.25px;
+    font-weight: bold;
+    font-size:12px;
+}
+._wts_container._wts_showStartEndLabel ._wts_cell._wts_selected+._wts_cell:not(._wts_selected){
+    overflow: visible;
+    contain: layout;
 }

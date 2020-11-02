@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './WeekTimeSelector.css';
 import './styles/default.css';
@@ -6,12 +7,18 @@ import './styles/default.css';
 class WeekTimeSelector extends React.Component{
 
 	static defaultProps = {
-		maxMinute: 1440,
-		minMinute: 0,
-		stepMinute: 30,
-		startingDay: 'monday',
-		weekDays: [ 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday' ],
-		disabled: false
+		maxMinute: 1440, // number of minutes
+		minMinute: 0, // number of minutes
+		stepMinute: 30, // number of minutes
+		startingDay: 'monday', // string
+		weekDays: [ 'monday', 'tuesday', 'wednesday', 
+					'thursday', 'friday', 'saturday', 'sunday' ], // array of strings
+		disabled: false, // bool
+		labelStartAndEnd: true, // bool
+
+		onChange: null, // function
+		onSelectStart: null, // function
+		onSelectEnd: null, // function
 	};
 
 	state = {
@@ -37,6 +44,9 @@ class WeekTimeSelector extends React.Component{
 		let className = ["_wts_container"];
 		if( this.props.disabled ){
 			className.push('_wts_disabled');
+		}
+		if( this.props.labelStartAndEnd ){
+			className.push('_wts_showStartEndLabel');
 		}
 		return <div className={className.join(' ')} style={this.functionalCSS()}>
 				{this._angleHTML()}
@@ -116,7 +126,8 @@ class WeekTimeSelector extends React.Component{
 				}
 				out.push( <div className={className.join(' ')} 
 								key={k} data-k={k} data-timestep={i} data-day={d} 
-								tabIndex={0} role="button" aria-label={title} title={title} 
+								tabIndex={0} role="button" 
+								aria-label={title} title={title} data-hh={hourText}
 								draggable={false}
 								onMouseDown={this.startSelecting.bind(this)}
 								onMouseEnter={this.enterCell.bind(this)}
@@ -135,21 +146,31 @@ class WeekTimeSelector extends React.Component{
 				+ ((( min * this.props.stepMinute )%60)+'').padStart(2,'0')
 	}
 
-	startSelecting( e ){
+	startSelecting( eDown ){
+		let _this = this;
+
 		this.setState({
 			selecting: true
 		})
 
-		let _this = this;
-		let mouseUp = e=>{
+
+		let mouseUp = eUp=>{
+			document.body.removeEventListener( 'mouseup', mouseUp);
 			_this.setState({
 				selecting: false
+			}, ()=>{
+				if( typeof this.props.onSelectEnd === 'function' ){
+					this.props.onSelectEnd.apply( this, [ eUp ]);
+				}
 			});
-			document.body.removeEventListener( 'mouseup', mouseUp);
 		};
 		document.body.addEventListener( 'mouseup', mouseUp);
 
-		this.selectCell( e.currentTarget.dataset.k)
+		this.selectCell( eDown.currentTarget.dataset.k );
+
+		if( typeof this.props.onSelectStart === 'function' ){
+			this.props.onSelectStart.apply( this, [ eDown ]);
+		}
 	}
 
 	enterCell( e ){
@@ -175,7 +196,8 @@ class WeekTimeSelector extends React.Component{
 			}
 			this.setState({
 				selectedCells: tmp
-			})
+			}, typeof this.props.onChange === 'function' ? 
+					this.props.onChange.apply(this) : undefined );
 		}
 	}
 
@@ -205,6 +227,20 @@ class WeekTimeSelector extends React.Component{
 	}
 
 }
+
+WeekTimeSelector.propTypes = {
+	maxMinute: PropTypes.number,
+	minMinute: PropTypes.number,
+	stepMinute: PropTypes.number,
+	startingDay: PropTypes.string,
+	weekDays: PropTypes.array,
+	disabled: PropTypes.bool,
+	labelStartAndEnd: PropTypes.bool,
+
+	onChange: PropTypes.func,
+	onSelectStart: PropTypes.func,
+	onSelectEnd: PropTypes.func,
+};
 
 
 export default  WeekTimeSelector;

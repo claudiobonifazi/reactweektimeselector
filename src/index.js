@@ -11,7 +11,17 @@ class App extends React.Component{
 		stepMinute: 30,
 		weekDays: [ 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday' ],
 		startingDay: "monday",
-		disabled: false
+		disabled: false,
+		labelStartAndEnd: true,
+		onChange: function(){
+			console.log("onChange triggered");
+		},
+		onSelectStart: function(){
+			console.log("onSelectStart triggered");
+		},
+		onSelectEnd: function(){
+			console.log("onSelectEnd triggered");
+		}
 	};
 
 	render(){
@@ -36,28 +46,28 @@ class App extends React.Component{
 						</legend>
 						<label>
 							Start time
-							<select value={this.state.minMinute} onChange={this.changePar.bind(this,'minMinute')}>
+							<select value={this.state.minMinute} onChange={this.changePar.bind(this,'minMinute')} data-type="number">
 								{startTimeDrop.map(el=><option key={this.hhmmToMin(el)} value={this.hhmmToMin(el)}>{el}</option>)}
 							</select>
 						</label>
 						<label>
 							End time
-							<select value={this.state.maxMinute} onChange={this.changePar.bind(this,'maxMinute')}>
+							<select value={this.state.maxMinute} onChange={this.changePar.bind(this,'maxMinute')} data-type="number">
 								{endTimeDrop.map(el=><option key={this.hhmmToMin(el)} value={this.hhmmToMin(el)}>{el}</option>)}
 							</select>
 						</label>
 						<label>
 							Step
-							<input type="number" min={1} max={1440} step={1} value={this.state.stepMinute} onChange={this.changePar.bind(this,'stepMinute')} readOnly />
+							<input type="number" min={1} max={1440} step={1} value={this.state.stepMinute} onChange={this.changePar.bind(this,'stepMinute')} data-type="number" readOnly />
 						</label>
 						<label>
 							Starting day
-							<select onChange={this.changePar.bind(this,'startingDay')}>
+							<select onChange={this.changePar.bind(this,'startingDay')} data-type="string">
 								{ this.state.weekDays.map(d=><option key={d}>{d}</option>) }
 							</select>
 						</label>
 						<label>
-								<input type="checkbox" value={this.state.disabled} onChange={this.changePar.bind(this,'disabled')} />
+								<input type="checkbox" value={this.state.disabled} onChange={this.changePar.bind(this,'disabled')} data-type="bool" />
 								Disabled
 						</label>
 					</form>
@@ -72,7 +82,12 @@ class App extends React.Component{
 		let tmp = this.state;
 		switch(e.currentTarget.type){
 			case 'checkbox': tmp[which] = e.currentTarget.checked; break;
-			default: tmp[which] = e.currentTarget.value; break;
+			default: 
+				switch(e.currentTarget.dataset.type){
+					case 'number': tmp[which] = parseInt(e.currentTarget.value); break;
+					default: tmp[which] = e.currentTarget.value; break;
+				}
+			break;
 		}
 		this.setState(tmp);
 	}
