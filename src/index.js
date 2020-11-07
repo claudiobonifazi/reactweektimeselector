@@ -9,6 +9,8 @@ class App extends React.Component{
 		minMinute: 0,
 		maxMinute: 1440,
 		stepMinute: 30,
+		twelveHourClock: false,
+		shortRowName: false,
 		weekDays: [ 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday' ],
 		startingDay: "monday",
 		disabled: false,
@@ -23,6 +25,7 @@ class App extends React.Component{
 			console.log("onSelectEnd triggered");
 		}
 	};
+
 
 	render(){
 
@@ -58,7 +61,9 @@ class App extends React.Component{
 						</label>
 						<label>
 							Step
-							<input type="number" min={1} max={1440} step={1} value={this.state.stepMinute} onChange={this.changePar.bind(this,'stepMinute')} data-type="number" readOnly />
+							<select onChange={this.changePar.bind(this,'stepMinute')} value={this.state.stepMinute} data-type="number">
+								{[ 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 50 ].map(n=><option key={n} value={n}>{n}</option>)}
+							</select>
 						</label>
 						<label>
 							Starting day
@@ -67,8 +72,20 @@ class App extends React.Component{
 							</select>
 						</label>
 						<label>
-								<input type="checkbox" value={this.state.disabled} onChange={this.changePar.bind(this,'disabled')} data-type="bool" />
-								Disabled
+							<input type="checkbox" checked={this.state.disabled} onChange={this.changePar.bind(this,'disabled')} data-type="bool" />
+							Disabled
+						</label>
+						<label>
+							<input type="checkbox" checked={this.state.twelveHourClock} onChange={this.changePar.bind(this,'twelveHourClock')} data-type="bool" />
+							twelve hour clock
+						</label>
+						<label>
+							<input type="checkbox" checked={this.state.labelStartAndEnd} onChange={this.changePar.bind(this,'labelStartAndEnd')} data-type="bool" />
+							label start and end
+						</label>
+						<label>
+							<input type="checkbox" checked={this.state.shortRowName} onChange={this.changePar.bind(this,'shortRowName')} data-type="bool" />
+							short row names
 						</label>
 					</form>
 					<hr/>

@@ -18,6 +18,8 @@
     grid-template-columns: max-content auto;
     grid-template-rows: max-content auto;
     overflow-x: auto;
+    padding-bottom: 0.5em;
+    contain: layout;
     
     background: var(--_wts_background-color,#fff);
     color: var(--_wts_text-color,#000);
@@ -119,4 +121,13 @@
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
+}
+
+
+
+
+._wts_container._wts_error{
+    background: crimson !important;
+    color: white !important;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.1) !important;
 }
