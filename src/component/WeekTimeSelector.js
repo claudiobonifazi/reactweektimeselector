@@ -281,9 +281,9 @@ class WeekTimeSelector extends React.Component{
 			let tmpKey = key.split('-');
 			let out = {
 				day: parseInt(tmpKey[0]),
-				time: this._minutesToText( tmpKey[1] )
-			}
-			out.text = this.props.weekDays[out.day]+' '+out.time+':00';
+				time: this._minutesToText( tmpKey[1] )+':00'
+			};
+			out.text = this.props.weekDays[out.day]+' '+out.time;
 			if( !isNaN(out.day) && out.time.length ){
 				return out;
 			}else{
@@ -309,8 +309,9 @@ class WeekTimeSelector extends React.Component{
 			}
 			for( let i in curSelections ){
 				if( curSelections.hasOwnProperty(i) ){
-					let sel = sel.split('-');
-					
+					if( curSelections[i].split('-')[0] == day ){
+						output[day].push(this.keyToTime(curSelections[i]));
+					}
 				}
 			}
 		}
@@ -319,7 +320,7 @@ class WeekTimeSelector extends React.Component{
 	}
 
 	selectionsToRaw( sel ){
-
+		
 	}
 
 	get value(){
