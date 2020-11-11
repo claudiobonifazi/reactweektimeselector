@@ -175,8 +175,9 @@ class WeekTimeSelector extends React.Component{
 	}
 
 	_minutesToText( min ){
-		let hh = Math.floor(( min * this.props.stepMinute )/60);
-		let mm = ( min * this.props.stepMinute )%60;
+		//console.log(min)
+		let hh = Math.floor(( min * this.props.stepMinute+this.props.minMinute )/60);
+		let mm = ( min * this.props.stepMinute+this.props.minMinute )%60;
 		if( !this.props.twelveHourClock ){
 			return (hh+'').padStart(2,'0')+':'+(mm+'').padStart(2,'0');
 		}else{
@@ -275,7 +276,30 @@ class WeekTimeSelector extends React.Component{
 					});
 	}
 
+	keyToTime( key ){
+		if( typeof key === 'string' && key.length && key.indexOf('-') >= 0 ){
+			let tmpKey = key.split('-');
+			let out = {
+				day: parseInt(tmpKey[0]),
+				time: this._minutesToText( tmpKey[1] )
+			}
+			out.text = this.props.weekDays[out.day]+' '+out.time+':00';
+			if( !isNaN(out.day) && out.time.length ){
+				return out;
+			}else{
+				this.setState({
+					error: "keyToTime( string key ):: invalid key value \""+key+"\""
+				});
+			}
+		}else{
+			this.setState({
+				error: "keyToTime( string key ):: invalid key format"
+			});
+		}
+	}
+
 	getSelections(){
+		console.time('getSelections');
 		let output = {};
 		let curSelections = this.getSelectionsRaw();
 
@@ -283,11 +307,14 @@ class WeekTimeSelector extends React.Component{
 			if( !output.hasOwnProperty(day) ){
 				output[day] = [];
 			}
-			for( let sel of curSelections ){
-				sel = sel.split('-');
+			for( let i in curSelections ){
+				if( curSelections.hasOwnProperty(i) ){
+					let sel = sel.split('-');
+					
+				}
 			}
 		}
-
+		console.timeEnd('getSelections');
 		return output;
 	}
 

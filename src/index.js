@@ -62,7 +62,7 @@ class App extends React.Component{
 						<label>
 							Step
 							<select onChange={this.changePar.bind(this,'stepMinute')} value={this.state.stepMinute} data-type="number">
-								{[ 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 50 ].map(n=><option key={n} value={n}>{n}</option>)}
+								{[ 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30 ].map(n=><option key={n} value={n}>{n}</option>)}
 							</select>
 						</label>
 						<label>
