@@ -61,7 +61,6 @@ class WeekTimeSelector extends React.Component{
 
 
 	render(){
-		console.log(this.state.error)
 		if( this.state.error === '' ){
 			let className = ["_wts_container"];
 			if( this.props.disabled ){
@@ -174,11 +173,11 @@ class WeekTimeSelector extends React.Component{
 				</div>;
 	}
 
-	_minutesToText( min ){
-		//console.log(min)
+	_minutesToText( min, overrideFormat ){
+		let twelveHourClock = !overrideFormat ? this.props.twelveHourClock : false;
 		let hh = Math.floor(( min * this.props.stepMinute+this.props.minMinute )/60);
 		let mm = ( min * this.props.stepMinute+this.props.minMinute )%60;
-		if( !this.props.twelveHourClock ){
+		if( !twelveHourClock ){
 			return (hh+'').padStart(2,'0')+':'+(mm+'').padStart(2,'0');
 		}else{
 			let ampm = hh >= 12 ? 'PM':'AM';
@@ -281,7 +280,7 @@ class WeekTimeSelector extends React.Component{
 			let tmpKey = key.split('-');
 			let out = {
 				day: parseInt(tmpKey[0]),
-				time: this._minutesToText( tmpKey[1] )+':00'
+				time: this._minutesToText( tmpKey[1], true )+':00'
 			};
 			out.text = this.props.weekDays[out.day]+' '+out.time;
 			if( !isNaN(out.day) && out.time.length ){
@@ -299,7 +298,6 @@ class WeekTimeSelector extends React.Component{
 	}
 
 	getSelections(){
-		console.time('getSelections');
 		let output = {};
 		let curSelections = this.getSelectionsRaw();
 
@@ -309,13 +307,12 @@ class WeekTimeSelector extends React.Component{
 			}
 			for( let i in curSelections ){
 				if( curSelections.hasOwnProperty(i) ){
-					if( curSelections[i].split('-')[0] == day ){
+					if( curSelections[i].split('-')[0] === day+'' ){
 						output[day].push(this.keyToTime(curSelections[i]));
 					}
 				}
 			}
 		}
-		console.timeEnd('getSelections');
 		return output;
 	}
 
