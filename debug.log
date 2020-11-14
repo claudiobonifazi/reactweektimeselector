@@ -2,3 +2,4 @@
 [1031/120819.162:ERROR:crash_report_database_win.cc(457)] unexpected header
 [1102/200055.857:ERROR:crash_report_database_win.cc(457)] unexpected header
 [1107/154146.083:ERROR:crash_report_database_win.cc(457)] unexpected header
+[1114/125030.283:ERROR:directory_reader_win.cc(43)] FindFirstFile: Impossibile trovare il percorso specificato. (0x3)
