@@ -4,4 +4,4 @@
 
 ## Demo
 
-![Demo](https://wts-example.surge.sh)
+[Demo](https://wts-example.surge.sh)
