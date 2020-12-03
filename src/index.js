@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import WeekTimeSelector from './component/WeekTimeSelector.js';
 import reportWebVitals from './reportWebVitals';
+import './index.css';
 
 class App extends React.Component{
 
@@ -15,7 +16,15 @@ class App extends React.Component{
 			weekDays: [ 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday' ],
 			startingDay: "monday",
 			disabled: false,
-			labelStartAndEnd: true,
+			labelStartAndEnd: false,
+			subRows: [
+				{ id: 1, name: "Worker1" },
+				{ id: 2, name: "Worker2" },
+				{ id: 3, name: "Worker3" },
+				{ id: 4, name: "Worker4" },
+				{ id: 5, name: "Worker5" },
+			],
+			verticalEnlarge: 1,
 			onChange: function(){
 				console.log("example onChange triggered");
 				window.testPage.setState({
@@ -54,7 +63,7 @@ class App extends React.Component{
 					<WeekTimeSelector {...this.state.weekSelProps} />
 
 					<hr/>
-					<form>
+					<form id="exampleForm">
 						<legend>
 							Props
 						</legend>
@@ -73,7 +82,7 @@ class App extends React.Component{
 						<label>
 							Step
 							<select onChange={this.changePar.bind(this,'stepMinute')} value={this.state.weekSelProps.stepMinute} data-type="number">
-								{[ 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30 ].map(n=><option key={n} value={n}>{n}</option>)}
+								{WeekTimeSelector.validSteps.map(n=><option key={n} value={n}>{n}</option>)}
 							</select>
 						</label>
 						<label>
@@ -97,6 +106,10 @@ class App extends React.Component{
 						<label>
 							<input type="checkbox" checked={this.state.weekSelProps.shortRowName} onChange={this.changePar.bind(this,'shortRowName')} data-type="bool" />
 							short row names
+						</label>
+						<label>
+							Vertical enlarge
+							<input type="number" min="0" value={this.state.weekSelProps.verticalEnlarge} onChange={this.changePar.bind(this,'verticalEnlarge')} data-type="number" style={{width:50}} />
 						</label>
 					</form>
 					<hr/>

@@ -35,11 +35,15 @@ body{
 }
 
 ._wts_dayCell{
-    padding: 1em 1em 1em 0.25em;
+    padding: 0;
     border-top: 1px solid var(--_wts_border-color);
     text-transform: capitalize;
     cursor: default;
     user-select:none;
+}
+._wts_dayName{
+    padding-left: 1.125em;
+    padding-right: 0.125em;
 }
 
 ._wts_body{
@@ -72,3 +76,4 @@ body{
     overflow: visible;
     contain: layout;
 }
+

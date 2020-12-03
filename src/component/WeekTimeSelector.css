@@ -10,6 +10,8 @@
     --numhours: 24;
     --numsteps: 48;
     --numdays: 7;
+    --numsubrows: 1;
+    --vertenlarge: 1;
 
     position: relative;
     width:100%;
@@ -62,7 +64,7 @@
     position: relative;
     display:grid;
     grid-template-columns: repeat( var(--numsteps), 1fr );
-    grid-template-rows: repeat( var(--numdays), 1fr );
+    grid-template-rows: repeat( calc( var(--numdays) * var(--numsubrows) ), 1fr );
 
     contain: layout;
     /*overflow:hidden;*/
@@ -130,4 +132,14 @@
     background: crimson !important;
     color: white !important;
     text-shadow: 0 1px 1px rgba(0,0,0,0.1) !important;
+}
+
+
+
+._wts_subRowsLabels{
+    display:grid;
+    place-content: space-evenly;
+}
+._wts_subRowLabel{
+    padding: calc( 0.25em * var(--vertenlarge) ) 0.25em calc( 0.25em * var(--vertenlarge) ) 0;
 }

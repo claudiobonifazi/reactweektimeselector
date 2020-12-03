@@ -17,6 +17,8 @@ class WeekTimeSelector extends React.Component{
 		startingDay: 'monday', // string
 		weekDays: [ 'monday', 'tuesday', 'wednesday', 
 					'thursday', 'friday', 'saturday', 'sunday' ], // array of strings
+		subRows: [],
+		verticalEnlarge: 1,
 
 		disabled: false, // bool
 
@@ -31,6 +33,14 @@ class WeekTimeSelector extends React.Component{
 		selectedCells: []
 	};
 
+	static validSteps = [
+		1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60
+	];
+
+	static subRowTemplate = {
+		id: "any",
+		name: "string"
+	};
 	
 
 	constructor(props){
@@ -40,10 +50,37 @@ class WeekTimeSelector extends React.Component{
 	}
 
 	_validate(){
-		const validSteps = [ 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30 ];
-		if( validSteps.indexOf(this.props.stepMinute) === -1 ){
+		let error = null;
+		if( WeekTimeSelector.validSteps.indexOf(this.props.stepMinute) === -1 ){
+			error = "Invalid prop value: stepMinute must have a value between: "+WeekTimeSelector.validSteps.join(', ');
+		}
+		if( !Array.isArray(this.props.weekDays) ){
+			error = "Invalid prop type: weekDays must be an array of strings";
+		}else{
+			if( this.props.weekDays.indexOf(this.props.startingDay) < 0 ){
+				error = "Invalid prop value: startingDay must be one of weekDays' values";
+			}
+		}
+		if( !Array.isArray(this.props.subRows) ){
+			error = "Invalid prop type: subRows must be an array";
+		}else{
+			if( this.props.subRows.length ){
+				for( let i in this.props.subRows ){
+					if( this.props.subRows.hasOwnProperty(i) ){
+						for( let j in WeekTimeSelector.subRowTemplate ){
+							if( !this.props.subRows[i].hasOwnProperty(j) ){
+								error = "Invalid prop value: one of subRows' elements doesn't have all the required fields"
+									  + ", that is: "+JSON.stringify( WeekTimeSelector.subRowTemplate, null, 4 );
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		if( error ){
 			this.setState({
-				error: "Invalid prop value: stepMinute must have a value between: "+validSteps.join(', ') 
+				error: error
 			});
 		}
 	}
@@ -99,6 +136,10 @@ class WeekTimeSelector extends React.Component{
 			);
 	}
 
+	hasSubRows(){
+		return this.props.subRows.length > 0;
+	}
+
 	_timeHeaderHTML(){
 		let numTimeSteps = this._numSteps();
 		let numHourStep = this._numHours();
@@ -138,6 +179,15 @@ class WeekTimeSelector extends React.Component{
 							<div className="_wts_dayName">
 								{ this.props.shortRowName ? day.substr(0,3).toUpperCase() : day }
 							</div>
+							{ this.props.subRows && this.props.subRows.length ? 
+								<div className="_wts_subRowsLabels">
+									{this.props.subRows.map(
+										row => <div className="_wts_subRowLabel" key={row.id} data-id={row.id}>
+													{row.name}
+												</div>
+									)}
+								</div>
+							: null }
 						</div> 
 			});
 		}
@@ -148,29 +198,57 @@ class WeekTimeSelector extends React.Component{
 		let numTimeSteps = this._numSteps();
 		let out = [];
 
-		for( let d = 0; d < this.props.weekDays.length; d++ ){
-			for( let i = 0; i < numTimeSteps; i++ ){
-				let k = d+'-'+i;
-				let hourText = this._minutesToText(i);
-				let title = this.props.weekDays[d]+' '+hourText;
-				let className = ["_wts_cell"];
-				if( this.state.selectedCells.indexOf(k) >= 0 ){
-					className.push('_wts_selected');
+		if( !this.hasSubRows() ){
+			for( let d = 0; d < this.props.weekDays.length; d++ ){
+				for( let i = 0; i < numTimeSteps; i++ ){
+					out.push( this._singleCell( d, i, d+'-'+i ) );
 				}
-				out.push( <div className={className.join(' ')} 
-								key={k} data-k={k} data-timestep={i} data-day={d} 
-								tabIndex={0} role="button" 
-								aria-label={title} title={title} data-hh={hourText}
-								draggable={false}
-								onMouseDown={this._startSelecting.bind(this)}
-								onMouseEnter={this._enterCell.bind(this)}
-								onKeyPress={this._keyboardSelection.bind(this)} /> );
+			}
+		}else{
+			for( let d = 0; d < this.props.weekDays.length; d++ ){
+				this.props.subRows.map(s=>{
+					for( let i = 0; i < numTimeSteps; i++ ){
+						out.push( this._singleCell( d, i, d+'-'+i+'-'+s.id, { "data-subrow": s.id } ) );
+					}
+					return true;
+				});
 			}
 		}
+
 
 		return <div className="_wts_body">
 					{out}
 				</div>;
+	}
+
+	_getSubRow( id ){
+		return this.props.subRows.find(s => (''+s.id) === (id+'') );
+	}
+
+	_singleCell( dayNum, time, key, extraProps ){
+		extraProps = extraProps || {};
+		let hourText = this._minutesToText(time);
+		let title = this.props.weekDays[dayNum]+' '+hourText;
+		if( extraProps && extraProps['data-subrow'] ){
+			let subRow = this._getSubRow( extraProps['data-subrow'] );
+			if( subRow ){
+				title += " \n "+subRow.name;
+			}
+		}
+		let className = ["_wts_cell"];
+		if( this.state.selectedCells.indexOf(key) >= 0 ){
+			className.push('_wts_selected');
+		}
+		return <div className={className.join(' ')} 
+					key={key} data-k={key} data-timestep={time} data-day={dayNum} 
+					tabIndex={0} role="button" 
+					aria-label={title} title={title} data-hh={hourText}
+					draggable={false}
+					onMouseDown={this._startSelecting.bind(this)}
+					onMouseEnter={this._enterCell.bind(this)}
+					onKeyPress={this._keyboardSelection.bind(this)}
+					{...extraProps} 
+				/>;
 	}
 
 	_minutesToText( min, overrideFormat ){
@@ -251,7 +329,9 @@ class WeekTimeSelector extends React.Component{
 			'--stepMinute': this.props.stepMinute,
 			'--numhours': numHourStep,
 			'--numsteps': numTimeSteps,
-			'--numdays': this.props.weekDays.length
+			'--numdays': this.props.weekDays.length,
+			'--numsubrows': this.props.subRows.length,
+			'--vertenlarge': this.props.verticalEnlarge
 		};
 
 		return out;
@@ -282,7 +362,10 @@ class WeekTimeSelector extends React.Component{
 				day: parseInt(tmpKey[0]),
 				time: this._minutesToText( tmpKey[1], true )+':00'
 			};
-			out.text = this.props.weekDays[out.day]+' '+out.time;
+			out.text = this.props.weekDays[out.day]+' - '+out.time;
+			if( typeof tmpKey[2] !== 'undefined' ){
+				out.text += ' - '+((this._getSubRow(tmpKey[2])||{}).name||'');
+			}
 			if( !isNaN(out.day) && out.time.length ){
 				return out;
 			}else{
@@ -300,6 +383,7 @@ class WeekTimeSelector extends React.Component{
 	getSelections(){
 		let output = {};
 		let curSelections = this.getSelectionsRaw();
+		let hasSubRows = this.hasSubRows();
 
 		for( let day = 0; day < this.props.weekDays.length; day++ ){
 			if( !output.hasOwnProperty(day) ){
@@ -307,8 +391,13 @@ class WeekTimeSelector extends React.Component{
 			}
 			for( let i in curSelections ){
 				if( curSelections.hasOwnProperty(i) ){
-					if( curSelections[i].split('-')[0] === day+'' ){
-						output[day].push(this.keyToTime(curSelections[i]));
+					let split = curSelections[i].split('-');
+					if( split[0] === day+'' ){
+						let tmp = this.keyToTime( curSelections[i] );
+						if( hasSubRows && typeof split[2] !== 'undefined' ){
+							tmp.subRow = this._getSubRow(split[2]);
+						}
+						output[day].push( tmp );
 					}
 				}
 			}
