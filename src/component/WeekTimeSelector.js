@@ -420,6 +420,10 @@ class WeekTimeSelector extends React.Component{
 		}
 	}
 
+	reset(){
+		return this.value = [];
+	}
+
 }
 
 WeekTimeSelector.propTypes = {

@@ -9,7 +9,7 @@ class App extends React.Component{
 	state = {
 		weekSelProps: {
 			minMinute: 8*60,
-			maxMinute: 20*60,
+			maxMinute: 18*60,
 			stepMinute: 30,
 			twelveHourClock: false,
 			shortRowName: false,
@@ -60,7 +60,7 @@ class App extends React.Component{
 
 		return <div>
 
-					<WeekTimeSelector {...this.state.weekSelProps} />
+					<WeekTimeSelector {...this.state.weekSelProps} ref={this.wts} />
 
 					<hr/>
 					<form id="exampleForm">
@@ -111,6 +111,29 @@ class App extends React.Component{
 							Vertical enlarge
 							<input type="number" min="0" value={this.state.weekSelProps.verticalEnlarge} onChange={this.changePar.bind(this,'verticalEnlarge')} data-type="number" style={{width:50}} />
 						</label>
+						<fieldset className="subRows">
+							<legend>SubRows</legend>
+							{this.state.weekSelProps.subRows.map(
+								(row,i) => <div className="subRow" key={i}>
+											<div className="subRow_del" onClick={this.delSubRow.bind(this)} data-i={i}>
+												&times;
+											</div>
+											<div>
+												<label>
+													<input type="text" value={row.id} onChange={this.changeSubRow.bind(this,'id')} data-i={i} />
+												</label>
+											</div>
+											<div>
+												<label>
+													<input type="text" value={row.name} onChange={this.changeSubRow.bind(this,'name')} data-i={i} />
+												</label>
+											</div>
+										</div>
+							)}
+							<div>
+								<a href="#" onClick={this.addSubRow.bind(this)}>+ Add</a>
+							</div>
+						</fieldset>
 					</form>
 					<hr/>
 					<output>
@@ -124,6 +147,34 @@ class App extends React.Component{
 						</ul>
 					</output>
 				</div>;
+	}
+
+	addSubRow(e){
+		e.preventDefault();
+		let tmp = this.state.weekSelProps;
+		tmp.subRows.push({
+			id: tmp.subRows.length + 1,
+			name: "Worker"+(tmp.subRows.length + 1)
+		});
+		this.setState({
+			weekSelProps: tmp
+		});
+	}
+
+	delSubRow(e){
+		let tmp = this.state.weekSelProps;
+		tmp.subRows.splice( e.currentTarget.dataset.i, 1 );
+		this.setState({
+			weekSelProps: tmp
+		});
+	}
+
+	changeSubRow(field,e){
+		let tmp = this.state.weekSelProps;
+		tmp.subRows[e.currentTarget.dataset.i][field] = e.currentTarget.value;
+		this.setState({
+			weekSelProps: tmp
+		});
 	}
 
 	changePar( which, e ){
